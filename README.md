@@ -50,12 +50,12 @@ module.exports = {
 ### Resources
   
 https://medium.com/@RupaniChirag/writing-unit-tests-in-typescript-d4719b8a0a40
+
 https://github.com/ChiragRupani/TSUnitTestsSetup/tree/master/HelloJest
 
 ### Alternatives
 
-- [Mocha](https://github.com/mochajs/mocha)
-- [Chai](https://github.com/chaijs/chai)
+- [Mocha](https://github.com/mochajs/mocha) / [Chai](https://github.com/chaijs/chai)
 - [Jasmine](https://github.com/jasmine/jasmine)
 
 

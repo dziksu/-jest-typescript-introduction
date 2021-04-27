@@ -1,4 +1,4 @@
-import {fetchData, fetchDataPromise} from './examples';
+import {doAsync, fetchData, fetchDataPromise} from './examples';
 // Testing Asynchronous Code
 
 // If we want to check result in async way wth call back we have to
@@ -16,15 +16,16 @@ test('The data is true', done => {
   fetchData(callback);
 });
 
-test('test promise with then way', () => {
+test('test promise with then', () => {
   return fetchDataPromise().then(data => {
     expect(data).toBe(true);
   });
 });
 
 test('the fetch fails with an Error', () => {
-  expect.assertions(1);
-  return fetchDataPromise(true).catch(e => expect(e).toMatch('Error'));
+  return fetchDataPromise(true).catch(e => {
+    expect(e).toMatch('Error');
+  });
 });
 
 // We can use also JEST functionality like ".resolves" and ".rejects"
@@ -32,6 +33,8 @@ test('.resolve', () => {
   return expect(fetchDataPromise()).resolves.toBe(true);
 });
 
+
+//TODO: check
 test('.reject', () => {
   // If we want to handle rejections we have to declare how many assertions we want to handle
   // without the declaration we won't catch any error.
@@ -61,6 +64,19 @@ test('combine resolve', async () => {
 
 test('combine reject', async () => {
   await expect(fetchDataPromise(true)).rejects.toMatch('Error');
+});
+
+// assertions #2
+test('doAsync calls both callbacks', () => {
+  expect.assertions(2);
+  function callback1(data) {
+    expect(data).toBeTruthy();
+  }
+  function callback2(data) {
+    expect(data).toBeTruthy();
+  }
+
+  doAsync(callback1, callback2);
 });
 
 

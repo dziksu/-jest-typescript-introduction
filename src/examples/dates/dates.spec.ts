@@ -12,11 +12,8 @@ describe('Method: onSameDay', () => {
     expect(onSameDay(date1, date2)).toBeFalsy();
   });
 
-  test('Pass only undefined', () => {
+  test('Pass only undefined/null', () => {
     expect(onSameDay(undefined, undefined)).toBeFalsy();
-  });
-
-  test('Pass only null', () => {
     expect(onSameDay(null, null)).toBeFalsy();
   });
 });
@@ -27,7 +24,7 @@ describe('Method: convertToDoubles', () => {
   });
 
   test('left 12 as 12', () => {
-    expect(convertToDoubles(12)).toBe(12);
+    expect(convertToDoubles(12)).toBe(1);
   });
 
   test('pass undefined', () => {

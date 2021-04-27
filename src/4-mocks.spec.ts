@@ -6,6 +6,10 @@
 // Let's go deep into mock object
 // We can create mock function by using jest.fn()
 
+import * as lodash from 'lodash';
+import * as examples from "./examples";
+
+// we can call it 'stub';
 const mockFn = jest.fn();
 
 // The mockFn function contains:
@@ -18,39 +22,78 @@ mockFn.mock.invocationCallOrder
 // how many times was called and with what results.
 // That's why we can call the "spies" to spy function.
 
-//Simple example how to handle returns value:
-const mockReturnValue = jest.fn();
-mockReturnValue.mockReturnValue(42);
-mockReturnValue(); // 42
-mockReturnValue.mockReturnValue(43);
-mockReturnValue(); // 43
+test('Mock return simple value', () => {
+  //Simple example how to handle returns value:
+  const mockReturnValue = jest.fn();
+  mockReturnValue.mockReturnValue(42);
+  mockReturnValue(); // 42
+  mockReturnValue.mockReturnValue(43);
+  mockReturnValue(); // 43
 
-// Below we can find a good example about how we can implement the mock
-const myMockFn = jest
-  .fn(() => 'default') // or .mockReturnValue('default')
-  .mockImplementationOnce(() => 'first call')
-  .mockImplementationOnce(() => 'second call');
+  // Below we can find a good example about how we can implement the mock
+});
 
-// 'first call', 'second call', 'default', 'default'
-console.log(myMockFn(), myMockFn(), myMockFn(), myMockFn());
+test('Mock return depends on invocation count', () => {
+  const myMockFn = jest
+    .fn(() => 'default') // or .mockReturnValue('default')
+    .mockImplementationOnce(() => 'first call')
+    .mockImplementationOnce(() => 'second call');
 
-// What about promises? No problem:
-jest.fn().mockImplementation(() => Promise.resolve(111));
+  // 'first call', 'second call', 'default', 'default'
+  console.log(myMockFn(), myMockFn(), myMockFn(), myMockFn());
+
+  // What about promises? No problem:
+  jest.fn().mockImplementation(() => Promise.resolve(111));
+});
 
 // Event with async await
 test('async test', async () => {
   const asyncMock = jest.fn().mockResolvedValue(43);
-  await asyncMock(); // 43
+  expect(await asyncMock()).toBe(43); // 43
 });
 
 test('async test #2', async () => {
   expect.assertions(2);
 
-  const asyncMock = jest
+  const asyncMock2 = jest
     .fn()
     .mockResolvedValueOnce('first call')
     .mockRejectedValueOnce(new Error('Async error'));
 
-  await expect(asyncMock()).resolves.toMatch('first call'); // first call
-  await expect(asyncMock()).rejects.toBeTruthy(); // throws "Async error"
+  await expect(asyncMock2()).resolves.toMatch('first call'); // first call
+  await expect(asyncMock2()).rejects.toBeTruthy(); // throws "Async error"
+});
+
+test('doAsync calls both callbacks', () => {
+  const stub1 = jest.fn();
+  const stub2 = jest.fn();
+
+  examples.doAsync(stub1, stub2);
+
+  expect(stub1).toHaveBeenCalled();
+  expect(stub1).toHaveBeenCalledTimes(1);
+  expect(stub1).toHaveBeenCalledWith('hello');
+
+  expect(stub2).toHaveBeenCalled();
+  expect(stub2).toHaveBeenCalledTimes(1);
+  expect(stub2).toHaveBeenCalledWith('there');
+});
+
+
+// jest.spyOn;
+function b(){
+  return lodash.isEmpty({});
+}
+
+test('doAsync2 spy invoked function', () => {
+  // jest.spyOn(lodash, 'isEmpty').mockImplementation(() => customImplementation)
+  // it's the same like:
+  // lodash['isEmpty'] = jest.fn(() => customImplementation);
+
+  jest.spyOn(lodash, 'isEmpty').mockReturnValue(false);
+  // lodash['isEmpty'] = jest.fn().mockReturnValue(false);
+
+  expect(b()).toBe(false);
+
+  jest.clearAllMocks();
 });

@@ -49,9 +49,19 @@ export function isValidCityFoodPair(city: string, food: string){
   return true;
 }
 
+export function returnNumberOne() {
+  return 1;
+}
+
 export async function doAsync(callback1, callback2){
   callback1('hello');
   callback2('there');
 }
 
-
+export async function doAsync2(callback1){
+  console.log(returnNumberOne());
+  if(returnNumberOne() === 1){
+    throw new Error('error');
+  }
+  callback1('hi');
+}

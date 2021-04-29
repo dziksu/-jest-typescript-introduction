@@ -65,3 +65,21 @@ export async function doAsync2(callback1){
   }
   callback1('hi');
 }
+
+export const video = {
+  // it's a getter!
+  get play() {
+    return true;
+  },
+};
+
+export const audio = {
+  _volume: false,
+  // it's a setter!
+  set volume(value) {
+    this._volume = value;
+  },
+  get volume() {
+    return this._volume;
+  },
+};

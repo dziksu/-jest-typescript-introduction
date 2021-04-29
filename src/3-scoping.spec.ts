@@ -64,4 +64,12 @@ describe('matching cities to foods', () => {
   test('San Juan <3 plantains', async () => {
     await expect(isValidCityFoodPair('San Juan', 'Mofongo')).toBe(true);
   });
+
+  afterAll(() => {
+
+  })
 });
+
+afterAll(() => {
+
+})

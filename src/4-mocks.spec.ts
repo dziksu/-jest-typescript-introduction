@@ -8,6 +8,7 @@
 
 import * as lodash from 'lodash';
 import * as examples from "./examples";
+import {audio, video} from "./examples";
 
 // we can call it 'stub';
 const mockFn = jest.fn();
@@ -27,9 +28,10 @@ test('Mock return simple value', () => {
   const mockReturnValue = jest.fn();
   mockReturnValue.mockReturnValue(42);
   mockReturnValue(); // 42
+  expect(mockReturnValue()).toBe(42);
   mockReturnValue.mockReturnValue(43);
   mockReturnValue(); // 43
-
+  expect(mockReturnValue()).toBe(42);
   // Below we can find a good example about how we can implement the mock
 });
 
@@ -82,6 +84,7 @@ test('doAsync calls both callbacks', () => {
 
 // jest.spyOn;
 function b(){
+  console.log('asd');
   return lodash.isEmpty({});
 }
 
@@ -90,10 +93,38 @@ test('doAsync2 spy invoked function', () => {
   // it's the same like:
   // lodash['isEmpty'] = jest.fn(() => customImplementation);
 
-  jest.spyOn(lodash, 'isEmpty').mockReturnValue(false);
+  const spy = jest.spyOn(lodash, 'isEmpty');
+  expect(spy).toHaveBeenCalled();
   // lodash['isEmpty'] = jest.fn().mockReturnValue(false);
 
   expect(b()).toBe(false);
 
   jest.clearAllMocks();
 });
+
+
+// jest.spyOn get/set;
+
+describe('Jest SpyOn - Get / Set', () => {
+  test('Get method "play"', () => {
+    const spy = jest.spyOn(video, 'play', 'get'); // we pass 'get'
+    const isPlaying = video.play;
+
+    expect(spy).toHaveBeenCalled();
+    expect(isPlaying).toBe(true);
+
+    spy.mockRestore();
+  });
+
+  test('Set property "volume"', () => {
+    const spy = jest.spyOn(audio, 'volume', 'set'); // we pass 'set'
+    audio.volume = 100;
+
+    expect(spy).toHaveBeenCalled();
+    expect(audio.volume).toBe(100);
+
+    spy.mockRestore();
+  });
+})
+
+
